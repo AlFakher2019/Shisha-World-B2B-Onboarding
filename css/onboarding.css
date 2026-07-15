@@ -1,0 +1,541 @@
+/* Shisha World B2B Onboarding — stepper form.
+   Written against the supplied design comps. Zoho's exported form.css is not
+   loaded; it styles a completely different (teal, single-column) theme. */
+
+:root {
+  /* Brand colours are sampled from the design comps — replace with the real
+     brand tokens if you have them. */
+  --sw-brand: #d9411e;
+  --sw-brand-dark: #b8350f;
+  --sw-ink: #1f2124;
+  --sw-body: #4a4f57;
+  --sw-muted: #8a9099;
+  --sw-line: #e2e4e7;
+  --sw-input-line: #cfd2d6;
+  --sw-disabled-bg: #dcdee1;
+  --sw-disabled-ink: #9aa0a6;
+  --sw-page-bg: #f4f4f2;
+  --sw-danger: #c0392b;
+  --sw-radius: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Several components below set an explicit `display`, which would otherwise
+   beat the UA stylesheet's rule for the `hidden` attribute. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background: var(--sw-page-bg);
+  color: var(--sw-body);
+  /* The comps use a geometric sans (looks like Poppins). Swap this stack for
+     the licensed brand face once you have it. */
+  font-family: "Poppins", "Century Gothic", "Segoe UI", system-ui, -apple-system,
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sw-page {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.sw-card {
+  width: 100%;
+  max-width: 560px;
+  padding: 36px 40px 32px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(20, 24, 30, 0.06),
+    0 8px 28px rgba(20, 24, 30, 0.07);
+}
+
+/* ==================== Progress ==================== */
+
+.sw-progress {
+  display: flex;
+  margin: 0 0 28px;
+  padding: 0 0 24px;
+  border-bottom: 1px solid var(--sw-line);
+  list-style: none;
+  counter-reset: none;
+}
+
+.sw-progress li {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+/* The connector lines live as ::before / ::after on a wrapper so they can span
+   the full half-width to each neighbour without a wrapping element per gap. */
+.sw-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.sw-node::before,
+.sw-node::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 50%;
+  height: 2px;
+  background: var(--sw-line);
+  transform: translateY(-50%);
+}
+.sw-node::before {
+  right: 50%;
+}
+.sw-node::after {
+  left: 50%;
+}
+.sw-progress li:first-child .sw-node::before,
+.sw-progress li:last-child .sw-node::after {
+  content: none;
+}
+
+.sw-dot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--sw-line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--sw-muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.sw-label {
+  margin-top: 8px;
+  color: var(--sw-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Reached = current or already completed. */
+.sw-progress li.sw-reached .sw-dot {
+  border-color: var(--sw-brand);
+  background: var(--sw-brand);
+  color: #fff;
+}
+.sw-progress li.sw-reached .sw-label {
+  color: var(--sw-brand);
+}
+/* A connector is orange only when the step it leads INTO is reached. Each gap is
+   drawn by two halves (left li's ::after + right li's ::before), so both halves
+   key off the right-hand step. */
+.sw-progress li.sw-reached .sw-node::before {
+  background: var(--sw-brand);
+}
+.sw-progress li:has(+ li.sw-reached) .sw-node::after {
+  background: var(--sw-brand);
+}
+
+/* ==================== Steps ==================== */
+
+.sw-step {
+  display: none;
+}
+.sw-step.sw-active {
+  display: block;
+}
+
+.sw-title {
+  margin: 0 0 22px;
+  color: var(--sw-ink);
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+
+.sw-subhead {
+  margin: 24px 0 14px;
+  color: var(--sw-ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+.sw-subhead:first-of-type {
+  margin-top: 0;
+}
+
+.sw-note {
+  margin: 0 0 16px;
+  color: var(--sw-body);
+  font-size: 13px;
+}
+
+/* ==================== Fields ==================== */
+
+.sw-field {
+  margin-bottom: 16px;
+}
+.sw-field > label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--sw-ink);
+  font-size: 13px;
+  font-weight: 500;
+}
+.sw-field > label em {
+  color: var(--sw-brand);
+  font-style: normal;
+}
+
+.sw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.sw-half {
+  width: calc(50% - 8px);
+}
+
+.sw-field input[type="text"],
+.sw-field input[type="email"],
+.sw-field input[type="tel"],
+.sw-field select {
+  width: 100%;
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--sw-input-line);
+  border-radius: var(--sw-radius);
+  background: #fff;
+  color: var(--sw-ink);
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sw-field input::placeholder {
+  color: var(--sw-muted);
+}
+
+.sw-field input:focus,
+.sw-field select:focus {
+  border-color: var(--sw-brand);
+  box-shadow: 0 0 0 3px rgba(217, 65, 30, 0.12);
+  outline: none;
+}
+
+.sw-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238a9099' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+/* Placeholder-ish colour while nothing is chosen yet. */
+.sw-field select:invalid,
+.sw-field select.sw-empty {
+  color: var(--sw-muted);
+}
+
+.sw-field.sw-invalid input,
+.sw-field.sw-invalid select,
+.sw-field.sw-invalid .sw-drop {
+  border-color: var(--sw-danger);
+}
+
+.sw-error {
+  display: none;
+  margin: 5px 0 0;
+  color: var(--sw-danger);
+  font-size: 12px;
+}
+.sw-error.sw-show {
+  display: block;
+}
+
+/* ==================== Checkboxes ==================== */
+
+.sw-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.sw-check input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: var(--sw-brand);
+  cursor: pointer;
+}
+
+.sw-check label {
+  color: var(--sw-body);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sw-check a {
+  color: var(--sw-brand);
+  text-decoration: underline;
+}
+
+/* ==================== File drop zones ==================== */
+
+.sw-drop {
+  position: relative;
+  padding: 22px 16px;
+  border: 1px dashed var(--sw-brand);
+  border-radius: var(--sw-radius);
+  text-align: center;
+  transition: background 0.15s;
+}
+
+.sw-drop.sw-dragging {
+  background: rgba(217, 65, 30, 0.05);
+}
+
+/* The real input covers the zone so click and native drop both work. */
+.sw-drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.sw-dropMain {
+  margin: 0;
+  color: var(--sw-body);
+  font-size: 13px;
+}
+
+.sw-dropIcon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0 auto 8px;
+  background: no-repeat center/contain
+    url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%234a4f57' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 10.5V2m0 0L5 5m3-3l3 3M2.5 11v2a1 1 0 001 1h9a1 1 0 001-1v-2'/%3E%3C/svg%3E");
+}
+
+.sw-dropBrowse {
+  color: var(--sw-brand);
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.sw-dropHint {
+  margin: 4px 0 0;
+  color: var(--sw-muted);
+  font-size: 12px;
+}
+
+.sw-dropFile {
+  position: relative;
+  z-index: 1;
+  margin: 10px 0 0;
+  color: var(--sw-ink);
+  font-size: 12px;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.sw-dropClear {
+  margin-left: 8px;
+  border: 0;
+  background: none;
+  color: var(--sw-brand);
+  font-family: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ==================== Footer ==================== */
+
+.sw-formError {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #f0c8c2;
+  border-radius: var(--sw-radius);
+  background: #fdf4f2;
+  color: var(--sw-danger);
+  font-size: 13px;
+}
+
+.sw-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--sw-line);
+}
+
+.sw-spacer {
+  flex: 1 1 auto;
+}
+
+.sw-login {
+  margin: 0;
+  color: var(--sw-body);
+  font-size: 13px;
+}
+.sw-login a {
+  color: var(--sw-brand);
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.sw-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.sw-btnBack {
+  background: #fff;
+  border-color: var(--sw-input-line);
+  color: var(--sw-ink);
+}
+.sw-btnBack:hover {
+  border-color: var(--sw-muted);
+}
+
+.sw-btnNext {
+  background: var(--sw-brand);
+  color: #fff;
+}
+.sw-btnNext:hover:not(:disabled) {
+  background: var(--sw-brand-dark);
+}
+.sw-btnNext:disabled {
+  background: var(--sw-disabled-bg);
+  color: var(--sw-disabled-ink);
+  cursor: default;
+}
+
+.sw-btn:focus-visible {
+  outline: 2px solid var(--sw-brand);
+  outline-offset: 2px;
+}
+
+.sw-arrowL,
+.sw-arrowR {
+  width: 14px;
+  height: 14px;
+  background: no-repeat center/contain;
+}
+.sw-arrowR {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h11m0 0l-4-4m4 4l-4 4'/%3E%3C/svg%3E");
+}
+.sw-btnNext:disabled .sw-arrowR {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%239aa0a6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h11m0 0l-4-4m4 4l-4 4'/%3E%3C/svg%3E");
+}
+.sw-arrowL {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%231f2124' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.5 8h-11m0 0l4-4m-4 4l4 4'/%3E%3C/svg%3E");
+}
+
+/* Spinner shown while a Zoho function call is in flight. */
+.sw-btnNext.sw-busy {
+  position: relative;
+  color: transparent;
+}
+.sw-btnNext.sw-busy .sw-arrowR {
+  visibility: hidden;
+}
+.sw-btnNext.sw-busy::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: sw-spin 0.6s linear infinite;
+}
+
+@keyframes sw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-btnNext.sw-busy::after {
+    animation-duration: 2s;
+  }
+}
+
+/* ==================== Mobile ==================== */
+
+@media screen and (max-width: 560px) {
+  .sw-card {
+    padding: 28px 20px 24px;
+  }
+  .sw-title {
+    font-size: 21px;
+  }
+  .sw-grid {
+    grid-template-columns: 1fr;
+  }
+  .sw-half {
+    width: 100%;
+  }
+  .sw-label {
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    white-space: normal;
+  }
+  .sw-footer {
+    flex-wrap: wrap;
+  }
+  .sw-login {
+    order: 3;
+    width: 100%;
+    text-align: center;
+  }
+}

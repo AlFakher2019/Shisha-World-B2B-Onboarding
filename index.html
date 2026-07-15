@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shisha World B2B Onboarding</title>
+    <link href="css/onboarding.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="sw-page">
+      <div class="sw-card">
+        <!-- Progress -->
+        <ol class="sw-progress" id="progress">
+          <li data-step="1">
+            <span class="sw-node"><span class="sw-dot">1</span></span>
+            <span class="sw-label">Contact Info</span>
+          </li>
+          <li data-step="2">
+            <span class="sw-node"><span class="sw-dot">2</span></span>
+            <span class="sw-label">Address</span>
+          </li>
+          <li data-step="3">
+            <span class="sw-node"><span class="sw-dot">3</span></span>
+            <span class="sw-label">Business Details</span>
+          </li>
+        </ol>
+
+        <form id="onboarding" novalidate>
+          <!-- ============ STEP 1 : CONTACT INFO ============ -->
+          <section class="sw-step" data-step="1">
+            <h1 class="sw-title">Just the essentials to get started</h1>
+
+            <h2 class="sw-subhead">Contact Information</h2>
+
+            <div class="sw-field">
+              <label for="email">Email address <em>*</em></label>
+              <input type="email" id="email" name="email" data-required autocomplete="email" />
+              <p class="sw-error" data-error-for="email"></p>
+            </div>
+
+            <div class="sw-grid">
+              <div class="sw-field">
+                <label for="first_name">First name <em>*</em></label>
+                <input type="text" id="first_name" name="first_name" data-required maxlength="255" autocomplete="given-name" />
+                <p class="sw-error" data-error-for="first_name"></p>
+              </div>
+              <div class="sw-field">
+                <label for="last_name">Last name <em>*</em></label>
+                <input type="text" id="last_name" name="last_name" data-required maxlength="255" autocomplete="family-name" />
+                <p class="sw-error" data-error-for="last_name"></p>
+              </div>
+            </div>
+
+            <div class="sw-grid">
+              <div class="sw-field">
+                <label for="mobile_phone">Mobile Phone</label>
+                <input type="tel" id="mobile_phone" name="mobile_phone" data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" autocomplete="tel" />
+                <p class="sw-error" data-error-for="mobile_phone"></p>
+              </div>
+              <div class="sw-field">
+                <label for="business_phone">Business Phone</label>
+                <input type="tel" id="business_phone" name="business_phone" data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" />
+                <p class="sw-error" data-error-for="business_phone"></p>
+              </div>
+            </div>
+
+            <h2 class="sw-subhead">Business Information</h2>
+
+            <div class="sw-grid">
+              <div class="sw-field">
+                <label for="company_name">Company Name <em>*</em></label>
+                <input type="text" id="company_name" name="company_name" data-required maxlength="255" autocomplete="organization" />
+                <p class="sw-error" data-error-for="company_name"></p>
+              </div>
+              <div class="sw-field">
+                <label for="business_type">Business Type <em>*</em></label>
+                <select id="business_type" name="business_type" data-required>
+                  <option value="">Select an option</option>
+                  <option value="HoReCa">HoReCa</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Marketing">Marketing</option>
+                </select>
+                <p class="sw-error" data-error-for="business_type"></p>
+              </div>
+            </div>
+
+            <div class="sw-check">
+              <input type="checkbox" id="terms" name="terms" data-required />
+              <label for="terms">
+                By creating an account, I agree to the
+                <a href="#" target="_blank" rel="noopener">Terms and Conditions</a>, and
+                <a href="#" target="_blank" rel="noopener">Privacy Policy</a>
+              </label>
+            </div>
+            <p class="sw-error" data-error-for="terms"></p>
+
+            <div class="sw-check">
+              <input type="checkbox" id="marketing_opt_in" name="marketing_opt_in" />
+              <label for="marketing_opt_in">
+                Yes, keep me up to date on news and exclusive offers on products
+                including tobacco.
+              </label>
+            </div>
+          </section>
+
+          <!-- ============ STEP 2 : ADDRESS ============ -->
+          <section class="sw-step" data-step="2">
+            <h1 class="sw-title">Business address</h1>
+
+            <div class="sw-field sw-half">
+              <label for="address_type">Address Type <em>*</em></label>
+              <select id="address_type" name="address_type" data-required>
+                <option value="">Select an option</option>
+                <option value="Freight Forwarder">Freight Forwarder</option>
+                <option value="Business Location">Business Location</option>
+                <option value="Hauptadresse">Hauptadresse</option>
+                <option value="Filialadresse">Filialadresse</option>
+                <option value="Alternative Business Location">Alternative Business Location</option>
+                <option value="Freight Pickup Center">Freight Pickup Center</option>
+                <option value="Residential">Residential</option>
+              </select>
+              <p class="sw-error" data-error-for="address_type"></p>
+            </div>
+
+            <div class="sw-field sw-half">
+              <label for="country">Country <em>*</em></label>
+              <select id="country" name="country" data-required>
+                <option value="">Select an option</option>
+              </select>
+              <p class="sw-error" data-error-for="country"></p>
+            </div>
+
+            <div class="sw-grid">
+              <div class="sw-field">
+                <label for="street">Street <em>*</em></label>
+                <input type="text" id="street" name="street" data-required maxlength="255" autocomplete="address-line1" />
+                <p class="sw-error" data-error-for="street"></p>
+              </div>
+              <div class="sw-field">
+                <label for="house_number">House number <em>*</em></label>
+                <input type="text" id="house_number" name="house_number" data-required maxlength="32" />
+                <p class="sw-error" data-error-for="house_number"></p>
+              </div>
+            </div>
+
+            <div class="sw-grid">
+              <div class="sw-field">
+                <label for="post_code">Post Code <em>*</em></label>
+                <input type="text" id="post_code" name="post_code" data-required maxlength="32" autocomplete="postal-code" />
+                <p class="sw-error" data-error-for="post_code"></p>
+              </div>
+              <div class="sw-field">
+                <label for="city">City <em>*</em></label>
+                <input type="text" id="city" name="city" data-required maxlength="255" autocomplete="address-level2" />
+                <p class="sw-error" data-error-for="city"></p>
+              </div>
+            </div>
+
+            <div class="sw-field">
+              <label for="additional_info">Additional info</label>
+              <input type="text" id="additional_info" name="additional_info" maxlength="65535" />
+            </div>
+
+            <div class="sw-check">
+              <input type="checkbox" id="default_shipping" name="default_shipping" />
+              <label for="default_shipping">Save as Default Shipping address</label>
+            </div>
+          </section>
+
+          <!-- ============ STEP 3 : BUSINESS DETAILS ============ -->
+          <section class="sw-step" data-step="3">
+            <h1 class="sw-title">Fast-track verification with your business details</h1>
+
+            <div class="sw-grid">
+              <div class="sw-field">
+                <label for="vat_id">VAT ID</label>
+                <input type="text" id="vat_id" name="vat_id" maxlength="255" placeholder="DE123456789" />
+                <p class="sw-error" data-error-for="vat_id"></p>
+              </div>
+              <div class="sw-field">
+                <label for="register_number">Business Register Number</label>
+                <input type="text" id="register_number" name="register_number" maxlength="255" placeholder="HRA 12345" />
+                <p class="sw-error" data-error-for="register_number"></p>
+              </div>
+            </div>
+
+            <div class="sw-field sw-half">
+              <label for="fid">FID (Track and Trace)</label>
+              <input type="text" id="fid" name="fid" maxlength="255" placeholder="0034412345" />
+              <p class="sw-error" data-error-for="fid"></p>
+            </div>
+
+            <h2 class="sw-subhead">Supporting Documents (Recommended)</h2>
+            <p class="sw-note">
+              Upload your documents to expedite verification. If you don't have
+              documents on hand, you'll receive an email with a link to upload
+              later. Recommended
+            </p>
+
+            <div class="sw-field">
+              <label for="vat_document">VAT ID document</label>
+              <div class="sw-drop" data-drop-for="vat_document">
+                <input type="file" id="vat_document" name="vat_document" accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
+                <p class="sw-dropMain">
+                  <span class="sw-dropIcon" aria-hidden="true"></span>
+                  Drag &amp; Drop <span class="sw-dropBrowse">Browse for files</span>
+                </p>
+                <p class="sw-dropHint">Upload PDF, ZIP, doc or Image (jpg, png, tif, gif, webp)</p>
+                <p class="sw-dropFile" hidden></p>
+              </div>
+              <p class="sw-error" data-error-for="vat_document"></p>
+            </div>
+
+            <div class="sw-field">
+              <label for="register_document">Business Register Number document</label>
+              <div class="sw-drop" data-drop-for="register_document">
+                <input type="file" id="register_document" name="register_document" accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
+                <p class="sw-dropMain">
+                  <span class="sw-dropIcon" aria-hidden="true"></span>
+                  Drag &amp; Drop <span class="sw-dropBrowse">Browse for files</span>
+                </p>
+                <p class="sw-dropHint">Upload PDF, ZIP, doc or Image (jpg, png, tif, gif, webp)</p>
+                <p class="sw-dropFile" hidden></p>
+              </div>
+              <p class="sw-error" data-error-for="register_document"></p>
+            </div>
+          </section>
+
+          <!-- ============ FOOTER ============ -->
+          <p class="sw-formError" id="formError" role="alert" hidden></p>
+
+          <div class="sw-footer">
+            <p class="sw-login" id="loginHint">
+              Have an account already? <a href="#">Log in</a>
+            </p>
+            <button type="button" class="sw-btn sw-btnBack" id="backBtn" hidden>
+              <span class="sw-arrowL" aria-hidden="true"></span> Back
+            </button>
+            <span class="sw-spacer"></span>
+            <button type="submit" class="sw-btn sw-btnNext" id="nextBtn" disabled>
+              <span class="sw-btnLabel">Save and Continue</span>
+              <span class="sw-arrowR" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+        <!-- No thank-you block here on purpose: "Submit application" posts
+             straight to Zoho Forms and the browser navigates to Zoho's own
+             response page, exactly as index.zoho-export.html did. -->
+      </div>
+    </div>
+
+    <script src="js/countries.js"></script>
+    <script src="js/onboarding.js"></script>
+  </body>
+</html>
