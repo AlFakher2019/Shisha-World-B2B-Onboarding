@@ -1,12 +1,12 @@
 /* Shisha World B2B Onboarding — 3-step stepper.
  *
- * Steps 1 and 2 POST their data to STEP_ENDPOINT (currently a webhook.site test
- * sink). The email address rides on both so the backend can correlate the
- * partial submissions.
+ * Steps 1 and 2 POST their data to the Zoho standalone function STEP_ENDPOINT,
+ * as a single `mp` argument holding a JSON map. The email address rides on both
+ * so the function can correlate the partial submissions.
  *
- * Step 3 does NOT hit the step endpoint. Its "Submit application" button
- * submits the whole form to the Zoho Forms endpoint as multipart/form-data,
- * using Zoho's own field names (see ZOHO_FIELD_MAP).
+ * Step 3 does NOT call the function. Its submit button posts the whole form to
+ * the Zoho Forms endpoint as multipart/form-data, using Zoho Forms' own field
+ * names (see ZOHO_FIELD_MAP).
  */
 (function () {
   "use strict";
@@ -15,14 +15,35 @@
    * CONFIG
    * ============================================================ */
 
-  // Where steps 1 and 2 post their data. Swap this for the Zoho standalone
-  // function URL when the functions are ready; see callStepEndpoint().
-  var STEP_ENDPOINT = "https://webhook.site/3ece9b9f-5075-4483-8fc4-6a90c3920d99";
+  /* Zoho standalone function called by steps 1 and 2.
+   *
+   * SECURITY: the zapikey below is readable by anyone who views source, and
+   * this function creates leads. Expect junk submissions unless the Deluge
+   * function itself rate-limits / sanity-checks its input. */
+  var STEP_ENDPOINT =
+    "https://www.zohoapis.eu/crm/v7/functions/shishaworldb2bonboardingformcreatelead/actions/execute?auth_type=apikey&zapikey=1003.0b08f668bda263ba81cb847d77df31f7.8ad9c959bffcec519169cf4b486fd8a9";
 
-  // webhook.site sends no Access-Control-Allow-Origin header, so the browser
-  // will not let us read the response. The POST still arrives. Set this to
-  // false once the endpoint returns proper CORS headers and you want to act on
-  // per-step responses (e.g. "email already registered").
+  /* Name of the Deluge function's argument. The step data is JSON-encoded into
+   * this single parameter, i.e.  mp={"step":1,"email":"a@b.com",...}
+   *
+   * It MUST go in the query string. Verified 2026-07-15 against the live
+   * function: Zoho reads arguments from the URL only and ignores the request
+   * body — an identical payload sent as a urlencoded body arrived as mp=null,
+   * while the same JSON in the query string arrived intact. */
+  var STEP_ENDPOINT_ARG = "mp";
+
+  /* Guards the query string against Zoho's URL length limit. `additional_info`
+   * is the only free-text field long enough to matter; it is truncated rather
+   * than allowed to silently break the whole request. */
+  var MAX_ARG_CHARS = 6000;
+
+  /* Verified 2026-07-15: zohoapis.eu returns no Access-Control-Allow-Origin,
+   * and answers the CORS preflight with 401 rather than approving it. So:
+   *   - the body MUST stay application/x-www-form-urlencoded (a CORS "simple
+   *     request") or the preflight kills it before it is ever sent;
+   *   - the response is unreadable, hence no-cors / opaque below.
+   * The POST is still delivered and the function still runs; we just cannot see
+   * what it returned. Flip to false only if Zoho starts sending CORS headers. */
   var STEP_ENDPOINT_OPAQUE = true;
 
   // The original Zoho Forms endpoint from the export. Submitted at the end.
@@ -280,23 +301,21 @@
    * Per-step POST
    * ============================================================ */
 
-  // Files are described but not uploaded here — the bytes go to Zoho Forms in
-  // the final multipart submit, so there is no reason to base64 them per step.
+  /* The map handed to the Deluge function as `mp`.
+   *
+   * Steps 1 and 2 carry no file fields, so nothing is base64'd here — the
+   * document bytes go to Zoho Forms in the final multipart submit instead.
+   *
+   * Booleans stay real booleans and `step` stays a real number: this is JSON,
+   * so Deluge receives them as Bool/Number rather than the string "false",
+   * which is truthy in Deluge and a classic source of inverted logic. */
   function payloadFor(step) {
-    var data = { step: String(step.n), email: valueOf("email") };
+    var data = { step: step.n, email: valueOf("email") };
 
     step.fields.forEach(function (name) {
       var node = el(name);
-      if (!node) return;
-
-      if (node.type === "file") {
-        var file = valueOf(name);
-        data[name] = file ? file.name + " (" + file.size + " bytes)" : "";
-      } else if (node.type === "checkbox") {
-        data[name] = valueOf(name) ? "true" : "false";
-      } else {
-        data[name] = valueOf(name);
-      }
+      if (!node || node.type === "file") return;
+      data[name] = valueOf(name); // checkbox -> boolean, everything else -> string
     });
     return data;
   }
@@ -307,19 +326,33 @@
       return { ok: true, skipped: true };
     }
 
-    // urlencoded rather than JSON on purpose: it counts as a CORS "simple
-    // request", so the browser skips the preflight OPTIONS that webhook.site
-    // (and Zoho function URLs) often fail to answer.
-    var body = new URLSearchParams();
+    // The whole step goes in one argument as a JSON map, so Deluge can read it
+    // with mp.get("email"). It goes in the QUERY STRING — Zoho ignores the
+    // request body for function arguments.
     var data = payloadFor(step);
-    Object.keys(data).forEach(function (k) {
-      body.append(k, data[k] == null ? "" : String(data[k]));
-    });
+    var json = JSON.stringify(data);
 
-    var res = await fetch(STEP_ENDPOINT, {
+    if (json.length > MAX_ARG_CHARS && data.additional_info) {
+      var slack = json.length - MAX_ARG_CHARS;
+      data.additional_info = data.additional_info.slice(0, -slack) + "…";
+      json = JSON.stringify(data);
+      console.warn("[onboarding] additional_info truncated to fit the URL limit");
+    }
+
+    var url =
+      STEP_ENDPOINT +
+      (STEP_ENDPOINT.indexOf("?") === -1 ? "?" : "&") +
+      STEP_ENDPOINT_ARG +
+      "=" +
+      encodeURIComponent(json);
+
+    console.info("[onboarding] step " + step.n + " -> " + STEP_ENDPOINT_ARG + ":", data);
+
+    // No body: Zoho would ignore it anyway. Staying free of custom headers keeps
+    // this a CORS "simple request" so no preflight is triggered.
+    var res = await fetch(url, {
       method: "POST",
       mode: STEP_ENDPOINT_OPAQUE ? "no-cors" : "cors",
-      body: body,
     });
 
     // An opaque response exposes no status or body; reaching here without a
