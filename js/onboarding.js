@@ -77,7 +77,7 @@
   var STEPS = [
     {
       n: 1,
-      nextLabel: "Save and Continue",
+      nextLabel: "Speichern und weiter",
       transport: "webhook",
       fields: [
         "email",
@@ -93,7 +93,7 @@
     },
     {
       n: 2,
-      nextLabel: "Save and Continue",
+      nextLabel: "Speichern und weiter",
       transport: "webhook",
       fields: [
         "address_type",
@@ -108,7 +108,7 @@
     },
     {
       n: 3,
-      nextLabel: "Submit application",
+      nextLabel: "Registrierung abschließen",
       transport: "zoho",
       fields: [
         "vat_id",
@@ -130,11 +130,11 @@
   var PHONE_RE = /^[+]{0,1}[()0-9-. ]+$/;
 
   var MESSAGES = {
-    required: "This field is required.",
-    email: "Enter a valid email address.",
-    phone: "Enter a valid phone number.",
-    terms: "Please accept the Terms and Conditions to continue.",
-    fileSize: "File is too large (max 5 MB).",
+    required: "Dieses Feld ist erforderlich.",
+    email: "Bitte gib eine gültige E-Mail-Adresse ein.",
+    phone: "Bitte gib eine gültige Telefonnummer ein.",
+    terms: "Bitte akzeptiere die Allgemeinen Geschäftsbedingungen, um fortzufahren.",
+    fileSize: "Die Datei ist zu groß (max. 5 MB).",
   };
 
   /* ============================================================
@@ -454,7 +454,9 @@
           showError(result.field, result.message || MESSAGES.required);
           el(result.field).focus();
         } else {
-          showFormError(result.message || "Something went wrong. Please try again.");
+          showFormError(
+            result.message || "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+          );
         }
         return;
       }
@@ -462,7 +464,7 @@
       console.error("[onboarding] step " + step.n + " failed:", err);
       setBusy(false);
       showFormError(
-        "We couldn't reach the server. Please check your connection and try again."
+        "Der Server ist nicht erreichbar. Bitte prüfe deine Verbindung und versuche es erneut."
       );
       return;
     }
@@ -514,7 +516,7 @@
         var clear = document.createElement("button");
         clear.type = "button";
         clear.className = "sw-dropClear";
-        clear.textContent = "Remove";
+        clear.textContent = "Entfernen";
         clear.addEventListener("click", function (e) {
           e.stopPropagation();
           input.value = "";

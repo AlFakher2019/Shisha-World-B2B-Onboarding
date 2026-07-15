@@ -11,12 +11,22 @@
   --sw-body: #4a4f57;
   --sw-muted: #8a9099;
   --sw-line: #e2e4e7;
-  --sw-input-line: #cfd2d6;
-  --sw-disabled-bg: #dcdee1;
-  --sw-disabled-ink: #9aa0a6;
+  /* Figma token: Component-Input-Color-border */
+  --sw-input-line: #9c9ea3;
+  /* Figma tokens: Component-Button-Color-dynamic_disabled_bg / _text */
+  --sw-disabled-bg: #ebebed;
+  --sw-disabled-ink: #6c6d73;
   --sw-page-bg: #f4f4f2;
   --sw-danger: #c0392b;
-  --sw-radius: 8px;
+  --sw-radius: 4px;
+
+  /* Two faces per the design system: Greycliff CF sets headings, Inter sets
+     everything else (labels, inputs, body). */
+  --sw-font-heading: "Greycliff CF", "Poppins", "Century Gothic", "Segoe UI",
+    system-ui, -apple-system, sans-serif;
+  --sw-font-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  /* Figma token: text-dynamic-grey-dark */
+  --sw-ink-strong: #101114;
 }
 
 *,
@@ -31,14 +41,38 @@
   display: none !important;
 }
 
+/* Greycliff CF is a licensed face (Connary Fagen) — it is not on Google Fonts
+   and an iframe does not inherit the host page's fonts, so the files must be
+   served from and declared in THIS document. Drop the webfonts into css/fonts/
+   and these rules pick them up; until then the stack falls back to Poppins.
+   Weights: 400 body, 600 subheads/labels, 700 titles. */
+@font-face {
+  font-family: "Greycliff CF";
+  src: url("fonts/GreycliffCF-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Greycliff CF";
+  src: url("fonts/GreycliffCF-DemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Greycliff CF";
+  src: url("fonts/GreycliffCF-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   margin: 0;
-  background: var(--sw-page-bg);
+  background: #fff;
   color: var(--sw-body);
-  /* The comps use a geometric sans (looks like Poppins). Swap this stack for
-     the licensed brand face once you have it. */
-  font-family: "Poppins", "Century Gothic", "Segoe UI", system-ui, -apple-system,
-    sans-serif;
+  font-family: var(--sw-font-body);
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -47,17 +81,15 @@ body {
 .sw-page {
   display: flex;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 0;
 }
 
+/* Full-bleed: the form is embedded in an iframe on the site, so the host page
+   supplies the surrounding chrome (background, width cap, spacing). */
 .sw-card {
   width: 100%;
-  max-width: 560px;
   padding: 36px 40px 32px;
-  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(20, 24, 30, 0.06),
-    0 8px 28px rgba(20, 24, 30, 0.07);
 }
 
 /* ==================== Progress ==================== */
@@ -169,17 +201,22 @@ body {
 .sw-title {
   margin: 0 0 22px;
   color: var(--sw-ink);
+  font-family: var(--sw-font-heading);
   font-size: 25px;
   font-weight: 700;
   line-height: 1.28;
   letter-spacing: -0.01em;
 }
 
+/* Section headings ("Kontaktdaten", "Unternehmensdaten", "Nachweise") — the
+   step title above them is deliberately larger and is styled by .sw-title. */
 .sw-subhead {
   margin: 24px 0 14px;
-  color: var(--sw-ink);
-  font-size: 14px;
+  color: var(--sw-ink-strong);
+  font-family: var(--sw-font-heading);
+  font-size: 16px;
   font-weight: 600;
+  line-height: 20px;
 }
 .sw-subhead:first-of-type {
   margin-top: 0;
@@ -194,14 +231,18 @@ body {
 /* ==================== Fields ==================== */
 
 .sw-field {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
+/* 4px label→input vs the 16px gap between fields: the tight inner spacing is
+   what makes each label read as bound to its own input. Keep them distinct. */
 .sw-field > label {
   display: block;
-  margin-bottom: 6px;
-  color: var(--sw-ink);
-  font-size: 13px;
-  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--sw-ink-strong);
+  font-family: var(--sw-font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
 }
 .sw-field > label em {
   color: var(--sw-brand);
@@ -223,8 +264,8 @@ body {
 .sw-field input[type="tel"],
 .sw-field select {
   width: 100%;
-  height: 46px;
-  padding: 0 12px;
+  height: 52px;
+  padding: 0 16px;
   border: 1px solid var(--sw-input-line);
   border-radius: var(--sw-radius);
   background: #fff;
@@ -249,10 +290,10 @@ body {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  padding-right: 36px;
+  padding-right: 40px;
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238a9099' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 16px center;
   background-size: 16px;
   cursor: pointer;
 }
@@ -420,14 +461,16 @@ body {
 .sw-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 4px;
   height: 44px;
-  padding: 0 22px;
+  padding: 0 24px;
   border: 1px solid transparent;
-  border-radius: 999px;
-  font-family: inherit;
+  border-radius: 98px;
+  font-family: var(--sw-font-heading);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 16px;
   white-space: nowrap;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -462,15 +505,17 @@ body {
 
 .sw-arrowL,
 .sw-arrowR {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   background: no-repeat center/contain;
 }
 .sw-arrowR {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h11m0 0l-4-4m4 4l-4 4'/%3E%3C/svg%3E");
 }
+/* Stroke must match --sw-disabled-ink (#6c6d73); it cannot read the token
+   because the arrow is a background image, so keep the two in sync by hand. */
 .sw-btnNext:disabled .sw-arrowR {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%239aa0a6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h11m0 0l-4-4m4 4l-4 4'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236c6d73' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h11m0 0l-4-4m4 4l-4 4'/%3E%3C/svg%3E");
 }
 .sw-arrowL {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%231f2124' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.5 8h-11m0 0l4-4m-4 4l4 4'/%3E%3C/svg%3E");

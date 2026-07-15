@@ -91,7 +91,7 @@ ol, ul {
 .zf-templateWidth {
 	margin:0 auto;	
 	padding: 30px 20px;
-	max-width: 800px;
+	
     width: 100%;
     box-sizing: border-box;
 }
