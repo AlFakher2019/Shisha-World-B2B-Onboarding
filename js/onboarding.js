@@ -41,21 +41,14 @@
   var ZOHO_FORM_ACTION =
     "https://forms.zohopublic.eu/ookaportal/form/ShishaWorldB2BOnboarding/formperma/8ZW0_sUo-Cj-T_lo3TrRq1KY2WlNFNvoDEb7W6VAsu8/htmlRecords/submit";
 
-  // Zoho Forms marks Address_Region (State/Region/Province) mandatory, but the
-  // design has no field for it. We copy City into it so the submission is not
-  // rejected. FIX PROPERLY by making Region optional in the Zoho form builder,
-  // then set this to false.
-  var COPY_CITY_INTO_REGION = true;
-
   // Where Zoho sends the user after a successful record submission. Left empty
   // so we can keep the user on this page and show our own thank-you block.
   var ZOHO_REDIRECT_URL = "";
 
   var MAX_FILE_BYTES = 5 * 1024 * 1024;
 
-  /* Our field name -> Zoho Forms field name.
-   * `street` and `house_number` are merged into Address_AddressLine1 because
-   * the Zoho form has no separate house-number field. */
+  /* Our field name -> Zoho Forms field name. The address fields map 1:1 onto
+   * Zoho's address block; all four are mandatory on both sides. */
   var ZOHO_FIELD_MAP = {
     business_unit: "SingleLine4", // hidden constant, "SHISHA WORLD B2B"
     email: "Email",
@@ -69,8 +62,10 @@
     marketing_opt_in: "DecisionBox1",
     address_type: "Dropdown1",
     country: "Address_Country",
-    post_code: "Address_ZipCode",
+    street: "Address_AddressLine1",
     city: "Address_City",
+    region: "Address_Region",
+    post_code: "Address_ZipCode",
     additional_info: "MultiLine",
     default_shipping: "DecisionBox2",
     vat_id: "SingleLine1",
@@ -112,9 +107,9 @@
         "address_type",
         "country",
         "street",
-        "house_number",
-        "post_code",
         "city",
+        "region",
+        "post_code",
         "additional_info",
         "default_shipping",
       ],
@@ -377,13 +372,6 @@
       if (!node || node.type === "file") return;
       values[ZOHO_FIELD_MAP[ours]] = valueOf(ours);
     });
-
-    // Zoho has one street line; the design splits street and house number.
-    var street = valueOf("street");
-    var house = valueOf("house_number");
-    values.Address_AddressLine1 = (street + " " + house).trim();
-
-    if (COPY_CITY_INTO_REGION) values.Address_Region = valueOf("city");
 
     return values;
   }

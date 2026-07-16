@@ -159,30 +159,32 @@
               <p class="sw-error" data-error-for="country"></p>
             </div>
 
-            <div class="sw-grid">
-              <div class="sw-field">
-                <label for="street">Straße <em>*</em></label>
-                <input type="text" id="street" name="street" data-required maxlength="255" autocomplete="address-line1" />
-                <p class="sw-error" data-error-for="street"></p>
-              </div>
-              <div class="sw-field">
-                <label for="house_number">Hausnummer <em>*</em></label>
-                <input type="text" id="house_number" name="house_number" data-required maxlength="32" />
-                <p class="sw-error" data-error-for="house_number"></p>
-              </div>
+            <!-- These four mirror Zoho's address block 1:1 (Address_AddressLine1,
+                 Address_City, Address_Region, Address_ZipCode) and are all
+                 mandatory there, so all four are required here too. -->
+            <div class="sw-field">
+              <label for="street">Straße und Hausnummer <em>*</em></label>
+              <input type="text" id="street" name="street" data-required maxlength="255" autocomplete="street-address" />
+              <p class="sw-error" data-error-for="street"></p>
             </div>
 
             <div class="sw-grid">
-              <div class="sw-field">
-                <label for="post_code">Postleitzahl <em>*</em></label>
-                <input type="text" id="post_code" name="post_code" data-required maxlength="32" autocomplete="postal-code" />
-                <p class="sw-error" data-error-for="post_code"></p>
-              </div>
               <div class="sw-field">
                 <label for="city">Ort <em>*</em></label>
                 <input type="text" id="city" name="city" data-required maxlength="255" autocomplete="address-level2" />
                 <p class="sw-error" data-error-for="city"></p>
               </div>
+              <div class="sw-field">
+                <label for="region">Bundesland / Region <em>*</em></label>
+                <input type="text" id="region" name="region" data-required maxlength="255" autocomplete="address-level1" />
+                <p class="sw-error" data-error-for="region"></p>
+              </div>
+            </div>
+
+            <div class="sw-field sw-half">
+              <label for="post_code">Postleitzahl <em>*</em></label>
+              <input type="text" id="post_code" name="post_code" data-required maxlength="32" autocomplete="postal-code" />
+              <p class="sw-error" data-error-for="post_code"></p>
             </div>
 
             <div class="sw-field">
