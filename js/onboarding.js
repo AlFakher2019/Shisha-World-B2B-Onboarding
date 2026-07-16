@@ -66,6 +66,7 @@
    * `street` and `house_number` are merged into Address_AddressLine1 because
    * the Zoho form has no separate house-number field. */
   var ZOHO_FIELD_MAP = {
+    business_unit: "SingleLine4", // hidden constant, "SHISHA WORLD B2B"
     email: "Email",
     first_name: "Name_First",
     last_name: "Name_Last",

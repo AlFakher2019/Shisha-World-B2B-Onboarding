@@ -34,6 +34,16 @@
         </ol>
 
         <form id="onboarding" novalidate>
+          <!-- Constant, never shown or edited. Sits outside the steps because it
+               belongs to no step; ZOHO_FIELD_MAP forwards it to Zoho's
+               SingleLine4 ("Business Unit") in the final submit. -->
+          <input
+            type="hidden"
+            id="business_unit"
+            name="business_unit"
+            value="SHISHA WORLD B2B"
+          />
+
           <!-- ============ STEP 1 : KONTAKTDATEN ============ -->
           <section class="sw-step" data-step="1">
             <h1 class="sw-title">Nur die wichtigsten Angaben für den Start</h1>
