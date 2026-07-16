@@ -15,36 +15,27 @@
    * CONFIG
    * ============================================================ */
 
-  /* Zoho standalone function called by steps 1 and 2.
+  /* Azure Function proxy called by steps 1 and 2. It forwards the payload to
+   * the Zoho standalone function server-side.
    *
-   * SECURITY: the zapikey below is readable by anyone who views source, and
-   * this function creates leads. Expect junk submissions unless the Deluge
-   * function itself rate-limits / sanity-checks its input. */
+   * Do NOT point this back at zohoapis.eu. Zoho answers any request carrying an
+   * `Origin` header with 400 INVALID_REQUEST — verified against every origin
+   * tried, including zoho.com itself. Browsers attach `Origin` to every
+   * cross-origin fetch and JS cannot remove it, so the browser can never call
+   * Zoho directly. The proxy exists for that reason; it also keeps the zapikey
+   * out of this file. */
   var STEP_ENDPOINT =
-    "https://www.zohoapis.eu/crm/v7/functions/shishaworldb2bonboardingformcreatelead/actions/execute?auth_type=apikey&zapikey=1003.0b08f668bda263ba81cb847d77df31f7.8ad9c959bffcec519169cf4b486fd8a9";
+    "https://sw-b2b-onboarding-form-to-zoho-g8ahh4a9ddecc7fk.germanywestcentral-01.azurewebsites.net/api/HttpTrigger1?code=OsMDw9CEmowSmuVnDFSpT5a_UsU2JxmsnYjt-CvCYquxAzFuJaUzKw%3D%3D";
 
-  /* Name of the Deluge function's argument. The step data is JSON-encoded into
-   * this single parameter, i.e.  mp={"step":1,"email":"a@b.com",...}
-   *
-   * It MUST go in the query string. Verified 2026-07-15 against the live
-   * function: Zoho reads arguments from the URL only and ignores the request
-   * body — an identical payload sent as a urlencoded body arrived as mp=null,
-   * while the same JSON in the query string arrived intact. */
+  /* Name of the Deluge argument. Sent as {"mp": {...}} in a JSON body; the
+   * Azure function unwraps it and re-sends it to Zoho as a multipart field
+   * (the only body format Zoho actually reads). */
   var STEP_ENDPOINT_ARG = "mp";
 
-  /* Guards the query string against Zoho's URL length limit. `additional_info`
-   * is the only free-text field long enough to matter; it is truncated rather
-   * than allowed to silently break the whole request. */
-  var MAX_ARG_CHARS = 6000;
-
-  /* Verified 2026-07-15: zohoapis.eu returns no Access-Control-Allow-Origin,
-   * and answers the CORS preflight with 401 rather than approving it. So:
-   *   - the body MUST stay application/x-www-form-urlencoded (a CORS "simple
-   *     request") or the preflight kills it before it is ever sent;
-   *   - the response is unreadable, hence no-cors / opaque below.
-   * The POST is still delivered and the function still runs; we just cannot see
-   * what it returned. Flip to false only if Zoho starts sending CORS headers. */
-  var STEP_ENDPOINT_OPAQUE = true;
+  /* The Azure proxy sends proper CORS headers, so unlike Zoho its response is
+   * readable. That is what makes per-field server errors possible — see the
+   * `ok:false` handling in callStepEndpoint(). */
+  var STEP_ENDPOINT_OPAQUE = false;
 
   // The original Zoho Forms endpoint from the export. Submitted at the end.
   var ZOHO_FORM_ACTION =
@@ -327,47 +318,43 @@
       return { ok: true, skipped: true };
     }
 
-    // The whole step goes in one argument as a JSON map, so Deluge can read it
-    // with mp.get("email"). It goes in the QUERY STRING — Zoho ignores the
-    // request body for function arguments.
+    // The step goes in one JSON map so Deluge can read it with mp.get("email").
+    // The Azure function parses req.body.mp, so it must be a JSON body — not
+    // the query string, and not multipart.
     var data = payloadFor(step);
-    var json = JSON.stringify(data);
-
-    if (json.length > MAX_ARG_CHARS && data.additional_info) {
-      var slack = json.length - MAX_ARG_CHARS;
-      data.additional_info = data.additional_info.slice(0, -slack) + "…";
-      json = JSON.stringify(data);
-      console.warn("[onboarding] additional_info truncated to fit the URL limit");
-    }
-
-    var url =
-      STEP_ENDPOINT +
-      (STEP_ENDPOINT.indexOf("?") === -1 ? "?" : "&") +
-      STEP_ENDPOINT_ARG +
-      "=" +
-      encodeURIComponent(json);
+    var payload = {};
+    payload[STEP_ENDPOINT_ARG] = data;
 
     console.info("[onboarding] step " + step.n + " -> " + STEP_ENDPOINT_ARG + ":", data);
 
-    // No body: Zoho would ignore it anyway. Staying free of custom headers keeps
-    // this a CORS "simple request" so no preflight is triggered.
-    var res = await fetch(url, {
+    // application/json is not CORS-safelisted, so this fires a preflight. The
+    // Azure function answers OPTIONS itself — its function.json must list
+    // "options" in methods, or the preflight 404s and nothing is ever sent.
+    var res = await fetch(STEP_ENDPOINT, {
       method: "POST",
       mode: STEP_ENDPOINT_OPAQUE ? "no-cors" : "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
     // An opaque response exposes no status or body; reaching here without a
     // network error is all the confirmation we can get.
     if (STEP_ENDPOINT_OPAQUE) return { ok: true, opaque: true };
 
-    if (!res.ok) throw new Error("Step endpoint returned HTTP " + res.status);
-
+    // Read the body BEFORE checking res.ok: the proxy reports field errors as
+    // {ok:false, field, message} with a 4xx status. Throwing on status first
+    // would turn "that email is already registered" into a generic
+    // "server unreachable" and lose the field it belongs to.
     var json = await res.json().catch(function () {
       return null;
     });
+
     if (json && json.ok === false) {
       return { ok: false, field: json.field, message: json.message };
     }
+
+    if (!res.ok) throw new Error("Step endpoint returned HTTP " + res.status);
+
     return { ok: true, data: json };
   }
 
