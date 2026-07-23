@@ -71,8 +71,10 @@
 
             <div class="sw-grid">
               <div class="sw-field">
-                <label for="mobile_phone">Mobil</label>
-                <input type="tel" id="mobile_phone" name="mobile_phone" data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" autocomplete="tel" />
+                <label for="mobile_phone">Mobil <em>*</em></label>
+                <!-- Required for the ERP: records without a phone number broke
+                     existing-customer imports before (per Poonam). -->
+                <input type="tel" id="mobile_phone" name="mobile_phone" data-required data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" autocomplete="tel" />
                 <p class="sw-error" data-error-for="mobile_phone"></p>
               </div>
               <div class="sw-field">
@@ -204,8 +206,8 @@
 
             <div class="sw-grid">
               <div class="sw-field">
-                <label for="vat_id">USt-ID</label>
-                <input type="text" id="vat_id" name="vat_id" maxlength="255" placeholder="DE123456789" />
+                <label for="vat_id">USt-ID <em>*</em></label>
+                <input type="text" id="vat_id" name="vat_id" data-required maxlength="255" placeholder="DE123456789" />
                 <p class="sw-error" data-error-for="vat_id"></p>
               </div>
               <div class="sw-field">
@@ -217,19 +219,41 @@
 
             <div class="sw-field sw-half">
               <label for="fid">FID (Track and trace)</label>
-              <input type="text" id="fid" name="fid" maxlength="255" placeholder="0034412345" />
+              <!-- Every FID starts with QCBDR<1DE — the placeholder shows the
+                   full expected shape so customers recognise which number to
+                   enter (requested by the ERP team). -->
+              <input type="text" id="fid" name="fid" data-check="fid" maxlength="22" placeholder="QCBDR<1DEXXXXXX/XXXXXX" spellcheck="false" autocapitalize="characters" />
               <p class="sw-error" data-error-for="fid"></p>
             </div>
 
-            <h2 class="sw-subhead">Nachweise (empfohlen)</h2>
+            <h2 class="sw-subhead">Nachweise</h2>
             <p class="sw-note">
-              Lade deine Dokumente hoch, um die Verifizierung zu beschleunigen.
-              Falls du die Dokumente aktuell nicht zur Hand hast, erhältst du
-              später eine E-Mail mit einem Link zum Hochladen.
+              Für die Registrierung benötigen wir deinen Gewerbeschein —
+              Vorder- und Rückseite, falls vorhanden.
             </p>
 
+            <!-- Both slots now carry the Gewerbeschein (front/back). The Zoho
+                 field names keep their historical meaning: FileUpload1
+                 (register_document) was always the Gewerbeschein slot, so it is
+                 the front; FileUpload (vat_document) — formerly the VAT ID
+                 document, which customers used for the Gewerbeschein anyway —
+                 is repurposed as the back. -->
             <div class="sw-field">
-              <label for="vat_document">Dokument zur USt-IdNr. hochladen</label>
+              <label for="register_document">Gewerbeschein hochladen (Vorderseite) <em>*</em></label>
+              <div class="sw-drop" data-drop-for="register_document">
+                <input type="file" id="register_document" name="register_document" data-required accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
+                <p class="sw-dropMain">
+                  <span class="sw-dropIcon" aria-hidden="true"></span>
+                  <span class="sw-dropBrowse">Datei auswählen</span> oder per Drag &amp; Drop hier ablegen
+                </p>
+                <p class="sw-dropHint">Unterstützte Formate: PDF, ZIP, DOC, JPG, PNG, TIF, GIF, WEBP</p>
+                <p class="sw-dropFile" hidden></p>
+              </div>
+              <p class="sw-error" data-error-for="register_document"></p>
+            </div>
+
+            <div class="sw-field">
+              <label for="vat_document">Gewerbeschein hochladen (Rückseite)</label>
               <div class="sw-drop" data-drop-for="vat_document">
                 <input type="file" id="vat_document" name="vat_document" accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
                 <p class="sw-dropMain">
@@ -240,20 +264,6 @@
                 <p class="sw-dropFile" hidden></p>
               </div>
               <p class="sw-error" data-error-for="vat_document"></p>
-            </div>
-
-            <div class="sw-field">
-              <label for="register_document">Dokument zur Handelsregisternummer hochladen</label>
-              <div class="sw-drop" data-drop-for="register_document">
-                <input type="file" id="register_document" name="register_document" accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
-                <p class="sw-dropMain">
-                  <span class="sw-dropIcon" aria-hidden="true"></span>
-                  <span class="sw-dropBrowse">Datei auswählen</span> oder per Drag &amp; Drop hier ablegen
-                </p>
-                <p class="sw-dropHint">Unterstützte Formate: PDF, ZIP, DOC, JPG, PNG, TIF, GIF, WEBP</p>
-                <p class="sw-dropFile" hidden></p>
-              </div>
-              <p class="sw-error" data-error-for="register_document"></p>
             </div>
           </section>
 

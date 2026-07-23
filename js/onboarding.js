@@ -71,8 +71,12 @@
     vat_id: "SingleLine1",
     register_number: "SingleLine2",
     fid: "SingleLine3",
-    vat_document: "FileUpload",
-    register_document: "FileUpload1",
+    /* Historically FileUpload = VAT ID document, FileUpload1 = register
+     * document. Both now carry the Gewerbeschein: FileUpload1 the front
+     * (required), FileUpload the back. Zoho-side labels still show the old
+     * names until someone renames them in the Zoho Forms builder. */
+    vat_document: "FileUpload", // Gewerbeschein back
+    register_document: "FileUpload1", // Gewerbeschein front
   };
 
   /* ============================================================
@@ -118,12 +122,14 @@
       n: 3,
       nextLabel: "Registrierung abschließen",
       transport: "zoho",
+      // register_document (front, required) before vat_document (back) to
+      // match the visual order — paintStepErrors focuses the first bad field.
       fields: [
         "vat_id",
         "register_number",
         "fid",
-        "vat_document",
         "register_document",
+        "vat_document",
       ],
     },
   ];
@@ -136,6 +142,9 @@
   var EMAIL_RE =
     /^[\w]([\w\-.+&'/]*)@([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,22}$/;
   var PHONE_RE = /^[+]{0,1}[()0-9-. ]+$/;
+  /* Every FID begins with QCBDR<1DE, then two 6-char blocks split by a slash —
+   * QCBDR<1DEXXXXXX/XXXXXX (format confirmed by the ERP team). */
+  var FID_RE = /^QCBDR<1DE[A-Z0-9]{6}\/[A-Z0-9]{6}$/;
 
   var MESSAGES = {
     required: "Dieses Feld ist erforderlich.",
@@ -143,6 +152,8 @@
     phone: "Bitte gib eine gültige Telefonnummer ein.",
     terms: "Bitte akzeptiere die Allgemeinen Geschäftsbedingungen, um fortzufahren.",
     fileSize: "Die Datei ist zu groß (max. 5 MB).",
+    fileRequired: "Bitte lade das Dokument hoch.",
+    fid: "Bitte gib eine gültige FID ein (Format: QCBDR<1DEXXXXXX/XXXXXX).",
   };
 
   /* ============================================================
@@ -195,6 +206,7 @@
     }
 
     if (node.type === "file") {
+      if (required && !val) return MESSAGES.fileRequired;
       if (val && val.size > MAX_FILE_BYTES) return MESSAGES.fileSize;
       return "";
     }
@@ -205,6 +217,8 @@
     if (node.type === "email" && !EMAIL_RE.test(val)) return MESSAGES.email;
     if (node.getAttribute("data-check") === "phone" && !PHONE_RE.test(val))
       return MESSAGES.phone;
+    if (node.getAttribute("data-check") === "fid" && !FID_RE.test(val))
+      return MESSAGES.fid;
 
     return "";
   }
@@ -498,10 +512,13 @@
   function populateCountries() {
     var select = el("country");
     var frag = document.createDocumentFragment();
-    (window.SW_COUNTRIES || []).forEach(function (name) {
+    // Display the country name; submit the ISO 3166-1 alpha-3 code (DEU, AUT,
+    // …) — the ERP matches countries by code. Applies to both the step-2
+    // webhook and the final Zoho submit, which read this select's value.
+    (window.SW_COUNTRIES || []).forEach(function (c) {
       var opt = document.createElement("option");
-      opt.value = name;
-      opt.textContent = name;
+      opt.value = c.code;
+      opt.textContent = c.name;
       frag.appendChild(opt);
     });
     select.appendChild(frag);
@@ -563,6 +580,26 @@
     });
   }
 
+  /* Live input restriction for the FID: uppercase as typed and drop anything
+   * that can never appear in a FID (only A–Z, 0–9, "<" and "/" can). Full
+   * pattern validation still happens in checkField on blur/submit — this only
+   * stops impossible characters from being entered at all. */
+  function initFidField() {
+    var input = el("fid");
+    if (!input) return;
+    input.addEventListener("input", function () {
+      var raw = input.value;
+      var clean = raw.toUpperCase().replace(/[^A-Z0-9<\/]/g, "");
+      if (clean === raw) return;
+      var pos = input.selectionStart;
+      var dropped = raw.length - clean.length;
+      input.value = clean;
+      // Keep the caret where the user was typing, not at the end.
+      var at = Math.max(0, (pos || 0) - dropped);
+      input.setSelectionRange(at, at);
+    });
+  }
+
   function initSelectPlaceholders() {
     Array.prototype.forEach.call(form.querySelectorAll("select"), function (sel) {
       function paint() {
@@ -603,6 +640,7 @@
   });
 
   populateCountries();
+  initFidField();
   initDropZones();
   initSelectPlaceholders();
   render();
