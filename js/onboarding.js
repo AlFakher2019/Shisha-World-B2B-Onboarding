@@ -63,6 +63,7 @@
     address_type: "Dropdown1",
     country: "Address_Country",
     street: "Address_AddressLine1",
+    house_number: "Address_AddressLine2",
     city: "Address_City",
     region: "Address_Region",
     post_code: "Address_ZipCode",
@@ -111,9 +112,10 @@
         "address_type",
         "country",
         "street",
+        "house_number",
+        "post_code",
         "city",
         "region",
-        "post_code",
         "additional_info",
         "default_shipping",
       ],
@@ -235,6 +237,28 @@
 
   function clearError(name) {
     showError(name, "");
+  }
+
+  /* Bundesland/Region is only relevant outside Germany — Zoho doesn't need it
+   * for German addresses. Hidden + optional when country is DEU, visible +
+   * required otherwise. */
+  var GERMANY_CODE = "DEU";
+
+  function syncRegionField() {
+    var countryNode = el("country");
+    var regionNode = el("region");
+    var wrap = fieldWrap("region");
+    if (!countryNode || !regionNode || !wrap) return;
+
+    var isGermany = countryNode.value === GERMANY_CODE;
+    wrap.hidden = isGermany;
+    if (isGermany) {
+      regionNode.removeAttribute("data-required");
+      regionNode.value = "";
+      clearError("region");
+    } else {
+      regionNode.setAttribute("data-required", "");
+    }
   }
 
   function stepIsValid(step) {
@@ -643,5 +667,7 @@
   initFidField();
   initDropZones();
   initSelectPlaceholders();
+  el("country").addEventListener("change", syncRegionField);
+  syncRegionField();
   render();
 })();

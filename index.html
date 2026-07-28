@@ -71,10 +71,10 @@
 
             <div class="sw-grid">
               <div class="sw-field">
-                <label for="mobile_phone">Mobil <em>*</em></label>
-                <!-- Required for the ERP: records without a phone number broke
-                     existing-customer imports before (per Poonam). -->
-                <input type="tel" id="mobile_phone" name="mobile_phone" data-required data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" autocomplete="tel" />
+                <label for="mobile_phone">Mobil</label>
+                <!-- Optional here per client request; Zoho enforces it as
+                     required when the Lead converts to an Account. -->
+                <input type="tel" id="mobile_phone" name="mobile_phone" data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" autocomplete="tel" />
                 <p class="sw-error" data-error-for="mobile_phone"></p>
               </div>
               <div class="sw-field">
@@ -161,32 +161,42 @@
               <p class="sw-error" data-error-for="country"></p>
             </div>
 
-            <!-- These four mirror Zoho's address block 1:1 (Address_AddressLine1,
-                 Address_City, Address_Region, Address_ZipCode) and are all
-                 mandatory there, so all four are required here too. -->
-            <div class="sw-field">
-              <label for="street">Straße und Hausnummer <em>*</em></label>
-              <input type="text" id="street" name="street" data-required maxlength="255" autocomplete="street-address" />
-              <p class="sw-error" data-error-for="street"></p>
+            <!-- These mirror Zoho's address block 1:1 (Address_AddressLine1,
+                 Address_AddressLine2, Address_City, Address_ZipCode) and are
+                 all mandatory there, so all are required here too. Order
+                 follows the Figma spec: Street/House, then Post Code/City. -->
+            <div class="sw-grid">
+              <div class="sw-field">
+                <label for="street">Straße <em>*</em></label>
+                <input type="text" id="street" name="street" data-required maxlength="255" autocomplete="address-line1" />
+                <p class="sw-error" data-error-for="street"></p>
+              </div>
+              <div class="sw-field">
+                <label for="house_number">Hausnummer <em>*</em></label>
+                <input type="text" id="house_number" name="house_number" data-required maxlength="255" autocomplete="address-line2" />
+                <p class="sw-error" data-error-for="house_number"></p>
+              </div>
             </div>
 
             <div class="sw-grid">
+              <div class="sw-field">
+                <label for="post_code">Postleitzahl <em>*</em></label>
+                <input type="text" id="post_code" name="post_code" data-required maxlength="32" autocomplete="postal-code" />
+                <p class="sw-error" data-error-for="post_code"></p>
+              </div>
               <div class="sw-field">
                 <label for="city">Ort <em>*</em></label>
                 <input type="text" id="city" name="city" data-required maxlength="255" autocomplete="address-level2" />
                 <p class="sw-error" data-error-for="city"></p>
               </div>
-              <div class="sw-field">
-                <label for="region">Bundesland / Region <em>*</em></label>
-                <input type="text" id="region" name="region" data-required maxlength="255" autocomplete="address-level1" />
-                <p class="sw-error" data-error-for="region"></p>
-              </div>
             </div>
 
-            <div class="sw-field sw-half">
-              <label for="post_code">Postleitzahl <em>*</em></label>
-              <input type="text" id="post_code" name="post_code" data-required maxlength="32" autocomplete="postal-code" />
-              <p class="sw-error" data-error-for="post_code"></p>
+            <!-- Required only outside Germany — see syncRegionField() in
+                 onboarding.js. Hidden and non-mandatory when country is DEU. -->
+            <div class="sw-field">
+              <label for="region">Bundesland / Region <em>*</em></label>
+              <input type="text" id="region" name="region" data-required maxlength="255" autocomplete="address-level1" />
+              <p class="sw-error" data-error-for="region"></p>
             </div>
 
             <div class="sw-field">
@@ -206,8 +216,10 @@
 
             <div class="sw-grid">
               <div class="sw-field">
-                <label for="vat_id">USt-ID <em>*</em></label>
-                <input type="text" id="vat_id" name="vat_id" data-required maxlength="255" placeholder="DE123456789" />
+                <label for="vat_id">USt-ID</label>
+                <!-- Optional here per client request; Zoho holds the
+                     necessary validation for this field. -->
+                <input type="text" id="vat_id" name="vat_id" maxlength="255" placeholder="DE123456789" />
                 <p class="sw-error" data-error-for="vat_id"></p>
               </div>
               <div class="sw-field">
@@ -239,9 +251,11 @@
                  document, which customers used for the Gewerbeschein anyway —
                  is repurposed as the back. -->
             <div class="sw-field">
-              <label for="register_document">Gewerbeschein hochladen (Vorderseite) <em>*</em></label>
+              <label for="register_document">Gewerbeschein hochladen (Vorderseite)</label>
+              <!-- Optional here per client request; Zoho holds the
+                   necessary validation for this field. -->
               <div class="sw-drop" data-drop-for="register_document">
-                <input type="file" id="register_document" name="register_document" data-required accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
+                <input type="file" id="register_document" name="register_document" accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
                 <p class="sw-dropMain">
                   <span class="sw-dropIcon" aria-hidden="true"></span>
                   <span class="sw-dropBrowse">Datei auswählen</span> oder per Drag &amp; Drop hier ablegen
