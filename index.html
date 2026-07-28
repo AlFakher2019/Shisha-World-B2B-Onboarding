@@ -191,8 +191,8 @@
               </div>
             </div>
 
-            <!-- Required only outside Germany — see syncRegionField() in
-                 onboarding.js. Hidden and non-mandatory when country is DEU. -->
+            <!-- Hidden by default; shown + required only once a non-Germany
+                 country is picked — see syncRegionField() in onboarding.js. -->
             <div class="sw-field">
               <label for="region">Bundesland / Region <em>*</em></label>
               <input type="text" id="region" name="region" data-required maxlength="255" autocomplete="address-level1" />

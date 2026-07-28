@@ -240,8 +240,8 @@
   }
 
   /* Bundesland/Region is only relevant outside Germany — Zoho doesn't need it
-   * for German addresses. Hidden + optional when country is DEU, visible +
-   * required otherwise. */
+   * for German addresses. Hidden + optional until a non-Germany country is
+   * picked; hidden again (and cleared) if the country is DEU or unset. */
   var GERMANY_CODE = "DEU";
 
   function syncRegionField() {
@@ -250,14 +250,14 @@
     var wrap = fieldWrap("region");
     if (!countryNode || !regionNode || !wrap) return;
 
-    var isGermany = countryNode.value === GERMANY_CODE;
-    wrap.hidden = isGermany;
-    if (isGermany) {
+    var show = countryNode.value !== "" && countryNode.value !== GERMANY_CODE;
+    wrap.hidden = !show;
+    if (show) {
+      regionNode.setAttribute("data-required", "");
+    } else {
       regionNode.removeAttribute("data-required");
       regionNode.value = "";
       clearError("region");
-    } else {
-      regionNode.setAttribute("data-required", "");
     }
   }
 
