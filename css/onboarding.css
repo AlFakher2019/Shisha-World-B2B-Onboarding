@@ -101,7 +101,7 @@ body {
    supplies the surrounding chrome (background, width cap, spacing). */
 .sw-card {
   width: 100%;
-  padding: 36px 40px 32px;
+  padding: 36px 27px 32px;
   background: #fff;
 }
 
