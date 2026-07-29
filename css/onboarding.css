@@ -68,6 +68,16 @@
   font-display: swap;
 }
 
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   margin: 0;
   background: #fff;
@@ -75,6 +85,9 @@ body {
   font-family: var(--sw-font-body);
   font-size: 14px;
   line-height: 1.5;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-font-smoothing: antialiased;
 }
 
