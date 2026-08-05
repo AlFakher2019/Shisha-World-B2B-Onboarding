@@ -1,310 +1,313 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Shisha World B2B Registrierung</title>
-    <!-- Inter (labels/body). Greycliff CF is licensed and self-hosted from
-         css/fonts/ via @font-face in onboarding.css. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link href="css/onboarding.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
-    <div class="sw-page">
-      <div class="sw-card">
-        <!-- Progress -->
-        <ol class="sw-progress" id="progress">
-          <li data-step="1">
-            <span class="sw-node"><span class="sw-dot">1</span></span>
-            <span class="sw-label">Kontaktdaten</span>
-          </li>
-          <li data-step="2">
-            <span class="sw-node"><span class="sw-dot">2</span></span>
-            <span class="sw-label">Adresse</span>
-          </li>
-          <li data-step="3">
-            <span class="sw-node"><span class="sw-dot">3</span></span>
-            <span class="sw-label">Unternehmensdaten</span>
-          </li>
-        </ol>
 
-        <form id="onboarding" novalidate>
-          <!-- Constant, never shown or edited. Sits outside the steps because it
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shisha World B2B Registrierung</title>
+  <!-- Inter (labels/body). Greycliff CF is licensed and self-hosted from
+         css/fonts/ via @font-face in onboarding.css. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="css/onboarding.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="sw-page">
+    <div class="sw-card">
+      <!-- Progress -->
+      <ol class="sw-progress" id="progress">
+        <li data-step="1">
+          <span class="sw-node"><span class="sw-dot">1</span></span>
+          <span class="sw-label">Kontaktdaten</span>
+        </li>
+        <li data-step="2">
+          <span class="sw-node"><span class="sw-dot">2</span></span>
+          <span class="sw-label">Adresse</span>
+        </li>
+        <li data-step="3">
+          <span class="sw-node"><span class="sw-dot">3</span></span>
+          <span class="sw-label">Unternehmensdaten</span>
+        </li>
+      </ol>
+
+      <form id="onboarding" novalidate>
+        <!-- Constant, never shown or edited. Sits outside the steps because it
                belongs to no step; ZOHO_FIELD_MAP forwards it to Zoho's
                SingleLine4 ("Business Unit") in the final submit. -->
-          <input
-            type="hidden"
-            id="business_unit"
-            name="business_unit"
-            value="SHISHA WORLD B2B"
-          />
+        <input type="hidden" id="business_unit" name="business_unit" value="SHISHA WORLD B2B" />
 
-          <!-- ============ STEP 1 : KONTAKTDATEN ============ -->
-          <section class="sw-step" data-step="1">
-            <h1 class="sw-title">Nur die wichtigsten Angaben für den Start</h1>
+        <!-- ============ STEP 1 : KONTAKTDATEN ============ -->
+        <section class="sw-step" data-step="1">
+          <h1 class="sw-title">Nur die wichtigsten Angaben für den Start</h1>
 
-            <h2 class="sw-subhead">Kontaktdaten</h2>
+          <h2 class="sw-subhead">Kontaktdaten</h2>
 
+          <div class="sw-field">
+            <label for="email">Email-Adresse <em>*</em></label>
+            <input type="email" id="email" name="email" data-required autocomplete="email" />
+            <p class="sw-error" data-error-for="email"></p>
+          </div>
+
+          <div class="sw-grid">
             <div class="sw-field">
-              <label for="email">Email-Adresse <em>*</em></label>
-              <input type="email" id="email" name="email" data-required autocomplete="email" />
-              <p class="sw-error" data-error-for="email"></p>
+              <label for="first_name">Vorname <em>*</em></label>
+              <input type="text" id="first_name" name="first_name" data-required maxlength="255"
+                autocomplete="given-name" />
+              <p class="sw-error" data-error-for="first_name"></p>
             </div>
-
-            <div class="sw-grid">
-              <div class="sw-field">
-                <label for="first_name">Vorname <em>*</em></label>
-                <input type="text" id="first_name" name="first_name" data-required maxlength="255" autocomplete="given-name" />
-                <p class="sw-error" data-error-for="first_name"></p>
-              </div>
-              <div class="sw-field">
-                <label for="last_name">Nachname <em>*</em></label>
-                <input type="text" id="last_name" name="last_name" data-required maxlength="255" autocomplete="family-name" />
-                <p class="sw-error" data-error-for="last_name"></p>
-              </div>
+            <div class="sw-field">
+              <label for="last_name">Nachname <em>*</em></label>
+              <input type="text" id="last_name" name="last_name" data-required maxlength="255"
+                autocomplete="family-name" />
+              <p class="sw-error" data-error-for="last_name"></p>
             </div>
+          </div>
 
-            <div class="sw-grid">
-              <div class="sw-field">
-                <label for="mobile_phone">Mobil</label>
-                <!-- Optional here per client request; Zoho enforces it as
+          <div class="sw-grid">
+            <div class="sw-field">
+              <label for="mobile_phone">Mobil</label>
+              <!-- Optional here per client request; Zoho enforces it as
                      required when the Lead converts to an Account. -->
-                <input type="tel" id="mobile_phone" name="mobile_phone" data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" autocomplete="tel" />
-                <p class="sw-error" data-error-for="mobile_phone"></p>
-              </div>
-              <div class="sw-field">
-                <label for="business_phone">Festnetz</label>
-                <input type="tel" id="business_phone" name="business_phone" data-check="phone" maxlength="20" placeholder="+49 15X XXXXXXX" />
-                <p class="sw-error" data-error-for="business_phone"></p>
-              </div>
+              <input type="tel" id="mobile_phone" name="mobile_phone" data-check="phone" maxlength="20"
+                placeholder="+49 15X XXXXXXX" autocomplete="tel" />
+              <p class="sw-error" data-error-for="mobile_phone"></p>
             </div>
+            <div class="sw-field">
+              <label for="business_phone">Festnetz</label>
+              <input type="tel" id="business_phone" name="business_phone" data-check="phone" maxlength="20"
+                placeholder="+49 15X XXXXXXX" />
+              <p class="sw-error" data-error-for="business_phone"></p>
+            </div>
+          </div>
 
-            <h2 class="sw-subhead">Unternehmensdaten</h2>
+          <h2 class="sw-subhead">Unternehmensdaten</h2>
 
-            <div class="sw-grid">
-              <div class="sw-field">
-                <label for="company_name">Name des Unternehmens <em>*</em></label>
-                <input type="text" id="company_name" name="company_name" data-required maxlength="255" autocomplete="organization" />
-                <p class="sw-error" data-error-for="company_name"></p>
-              </div>
-              <div class="sw-field">
-                <label for="business_type">Unternehmenstyp <em>*</em></label>
-                <!-- `value` stays English: it is posted verbatim to Zoho, which
+          <div class="sw-grid">
+            <div class="sw-field">
+              <label for="company_name">Name des Unternehmens <em>*</em></label>
+              <input type="text" id="company_name" name="company_name" data-required maxlength="255"
+                autocomplete="organization" />
+              <p class="sw-error" data-error-for="company_name"></p>
+            </div>
+            <div class="sw-field">
+              <label for="business_type">Unternehmenstyp <em>*</em></label>
+              <!-- `value` stays English: it is posted verbatim to Zoho, which
                      only accepts its own option values. Translate the text only. -->
-                <select id="business_type" name="business_type" data-required>
-                  <option value="">Bitte auswählen</option>
-                  <option value="Limited Liability Company">Limited Liability Company</option>
-                  <option value="Sole Proprietorship">Sole Proprietorship</option>
-                  <option value="Entrepreneurial Company">Entrepreneurial Company</option>
-                  <option value="Business">Business</option>
-                  <option value="Consumer">Consumer</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Gesellschaft mit beschränkter Haftung – GmbH">Gesellschaft mit beschränkter Haftung – GmbH</option>
-                  <option value="Einzelunternehmen – e.K./Einzelkaufmann">Einzelunternehmen – e.K./Einzelkaufmann</option>
-                  <option value="Sonstiges – GbR, KG, OHG, AG, usw">Sonstiges – GbR, KG, OHG, AG, usw</option>
-                  <option value="Unternehmergesellschaft – UG">Unternehmergesellschaft – UG</option>
-                </select>
-                <p class="sw-error" data-error-for="business_type"></p>
-              </div>
-            </div>
-
-            <div class="sw-check">
-              <input type="checkbox" id="terms" name="terms" data-required />
-              <label for="terms">
-                Mit der Erstellung eines Kontos stimme ich den
-                <a href="https://shisha-world.com/content/agb" target="_blank" rel="noopener">Allgemeinen Geschäftsbedingungen</a>
-                und der
-                <a href="https://www.shisha-world.com/content/datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a> zu.
-              </label>
-            </div>
-            <p class="sw-error" data-error-for="terms"></p>
-
-            <div class="sw-check">
-              <input type="checkbox" id="marketing_opt_in" name="marketing_opt_in" />
-              <label for="marketing_opt_in">
-                Ja, ich möchte über Neuigkeiten und exklusive B2B Angebote
-                informiert werden, einschließlich Angeboten für Tabakprodukte.
-              </label>
-            </div>
-          </section>
-
-          <!-- ============ STEP 2 : ADRESSE ============ -->
-          <section class="sw-step" data-step="2">
-            <h1 class="sw-title">Deine Geschäftsadresse</h1>
-
-            <div class="sw-field sw-half">
-              <label for="address_type">Adresstyp <em>*</em></label>
-              <!-- `value` stays English: posted verbatim to Zoho. -->
-              <select id="address_type" name="address_type" data-required>
+              <select id="business_type" name="business_type" data-required>
                 <option value="">Bitte auswählen</option>
-                <option value="Freight Forwarder">Spedition</option>
-                <option value="Business Location">Geschäftsstandort</option>
-                <option value="Hauptadresse">Hauptadresse</option>
-                <option value="Filialadresse">Filialadresse</option>
-                <option value="Alternative Business Location">Alternativer Geschäftsstandort</option>
-                <option value="Freight Pickup Center">Frachtabholzentrum</option>
-                <option value="Residential">Privatadresse</option>
-              </select>
-              <p class="sw-error" data-error-for="address_type"></p>
-            </div>
+                <option value="Gesellschaft mit beschränkter Haftung – GmbH">Gesellschaft mit beschränkter Haftung –
+                  GmbH</option>
+                <option value="Einzelunternehmen – e.K./Einzelkaufmann">Einzelunternehmen – e.K./Einzelkaufmann</option>
+                <option value="Unternehmergesellschaft – UG">Unternehmergesellschaft – UG</option>
 
-            <div class="sw-field sw-half">
-              <label for="country">Land <em>*</em></label>
-              <select id="country" name="country" data-required>
-                <option value="">Bitte auswählen</option>
+                <option value="Sonstiges – GbR, KG, OHG, AG, usw">Sonstiges – GbR, KG, OHG, AG, usw</option>
               </select>
-              <p class="sw-error" data-error-for="country"></p>
+              <p class="sw-error" data-error-for="business_type"></p>
             </div>
+          </div>
 
-            <!-- These mirror Zoho's address block 1:1 (Address_AddressLine1,
+          <div class="sw-check">
+            <input type="checkbox" id="terms" name="terms" data-required />
+            <label for="terms">
+              Mit der Erstellung eines Kontos stimme ich den
+              <a href="https://shisha-world.com/content/agb" target="_blank" rel="noopener">Allgemeinen
+                Geschäftsbedingungen</a>
+              und der
+              <a href="https://www.shisha-world.com/content/datenschutz" target="_blank"
+                rel="noopener">Datenschutzerklärung</a> zu.
+            </label>
+          </div>
+          <p class="sw-error" data-error-for="terms"></p>
+
+          <div class="sw-check">
+            <input type="checkbox" id="marketing_opt_in" name="marketing_opt_in" />
+            <label for="marketing_opt_in">
+              Ja, ich möchte über Neuigkeiten und exklusive B2B Angebote
+              informiert werden, einschließlich Angeboten für Tabakprodukte.
+            </label>
+          </div>
+        </section>
+
+        <!-- ============ STEP 2 : ADRESSE ============ -->
+        <section class="sw-step" data-step="2">
+          <h1 class="sw-title">Deine Geschäftsadresse</h1>
+
+          <div class="sw-field sw-half">
+            <label for="address_type">Adresstyp <em>*</em></label>
+            <!-- `value` stays English: posted verbatim to Zoho. -->
+            <select id="address_type" name="address_type" data-required>
+              <option value="">Bitte auswählen</option>
+              <option value="Freight Forwarder">Spedition</option>
+              <option value="Business Location">Geschäftsstandort</option>
+              <option value="Hauptadresse">Hauptadresse</option>
+              <option value="Filialadresse">Filialadresse</option>
+              <option value="Alternative Business Location">Alternativer Geschäftsstandort</option>
+              <option value="Freight Pickup Center">Frachtabholzentrum</option>
+              <option value="Residential">Privatadresse</option>
+            </select>
+            <p class="sw-error" data-error-for="address_type"></p>
+          </div>
+
+          <div class="sw-field sw-half">
+            <label for="country">Land <em>*</em></label>
+            <select id="country" name="country" data-required>
+              <option value="">Bitte auswählen</option>
+            </select>
+            <p class="sw-error" data-error-for="country"></p>
+          </div>
+
+          <!-- These mirror Zoho's address block 1:1 (Address_AddressLine1,
                  Address_AddressLine2, Address_City, Address_ZipCode) and are
                  all mandatory there, so all are required here too. Order
                  follows the Figma spec: Street/House, then Post Code/City. -->
-            <div class="sw-grid">
-              <div class="sw-field">
-                <label for="street">Straße <em>*</em></label>
-                <input type="text" id="street" name="street" data-required maxlength="255" autocomplete="address-line1" />
-                <p class="sw-error" data-error-for="street"></p>
-              </div>
-              <div class="sw-field">
-                <label for="house_number">Hausnummer <em>*</em></label>
-                <input type="text" id="house_number" name="house_number" data-required maxlength="255" autocomplete="address-line2" />
-                <p class="sw-error" data-error-for="house_number"></p>
-              </div>
+          <div class="sw-grid">
+            <div class="sw-field">
+              <label for="street">Straße <em>*</em></label>
+              <input type="text" id="street" name="street" data-required maxlength="255" autocomplete="address-line1" />
+              <p class="sw-error" data-error-for="street"></p>
             </div>
-
-            <div class="sw-grid">
-              <div class="sw-field">
-                <label for="post_code">Postleitzahl <em>*</em></label>
-                <input type="text" id="post_code" name="post_code" data-required maxlength="32" autocomplete="postal-code" />
-                <p class="sw-error" data-error-for="post_code"></p>
-              </div>
-              <div class="sw-field">
-                <label for="city">Ort <em>*</em></label>
-                <input type="text" id="city" name="city" data-required maxlength="255" autocomplete="address-level2" />
-                <p class="sw-error" data-error-for="city"></p>
-              </div>
+            <div class="sw-field">
+              <label for="house_number">Hausnummer <em>*</em></label>
+              <input type="text" id="house_number" name="house_number" data-required maxlength="255"
+                autocomplete="address-line2" />
+              <p class="sw-error" data-error-for="house_number"></p>
             </div>
+          </div>
 
-            <!-- Hidden by default; shown + required only once a non-Germany
+          <div class="sw-grid">
+            <div class="sw-field">
+              <label for="post_code">Postleitzahl <em>*</em></label>
+              <input type="text" id="post_code" name="post_code" data-required maxlength="32"
+                autocomplete="postal-code" />
+              <p class="sw-error" data-error-for="post_code"></p>
+            </div>
+            <div class="sw-field">
+              <label for="city">Ort <em>*</em></label>
+              <input type="text" id="city" name="city" data-required maxlength="255" autocomplete="address-level2" />
+              <p class="sw-error" data-error-for="city"></p>
+            </div>
+          </div>
+
+          <!-- Hidden by default; shown + required only once a non-Germany
                  country is picked — see syncRegionField() in onboarding.js. -->
+          <div class="sw-field">
+            <label for="region">Bundesland / Region <em>*</em></label>
+            <input type="text" id="region" name="region" data-required maxlength="255" autocomplete="address-level1" />
+            <p class="sw-error" data-error-for="region"></p>
+          </div>
+
+          <div class="sw-field">
+            <label for="additional_info">Zusatz</label>
+            <input type="text" id="additional_info" name="additional_info" maxlength="65535" />
+          </div>
+
+          <div class="sw-check">
+            <input type="checkbox" id="default_shipping" name="default_shipping" />
+            <label for="default_shipping">Als Standard-Versandadresse speichern</label>
+          </div>
+        </section>
+
+        <!-- ============ STEP 3 : UNTERNEHMENSDATEN ============ -->
+        <section class="sw-step" data-step="3">
+          <h1 class="sw-title">Schnellere Verifizierung mit Unternehmensdaten</h1>
+
+          <div class="sw-grid">
             <div class="sw-field">
-              <label for="region">Bundesland / Region <em>*</em></label>
-              <input type="text" id="region" name="region" data-required maxlength="255" autocomplete="address-level1" />
-              <p class="sw-error" data-error-for="region"></p>
-            </div>
-
-            <div class="sw-field">
-              <label for="additional_info">Zusatz</label>
-              <input type="text" id="additional_info" name="additional_info" maxlength="65535" />
-            </div>
-
-            <div class="sw-check">
-              <input type="checkbox" id="default_shipping" name="default_shipping" />
-              <label for="default_shipping">Als Standard-Versandadresse speichern</label>
-            </div>
-          </section>
-
-          <!-- ============ STEP 3 : UNTERNEHMENSDATEN ============ -->
-          <section class="sw-step" data-step="3">
-            <h1 class="sw-title">Schnellere Verifizierung mit Unternehmensdaten</h1>
-
-            <div class="sw-grid">
-              <div class="sw-field">
-                <label for="vat_id">USt-ID</label>
-                <!-- Optional here per client request; Zoho holds the
+              <label for="vat_id">USt-ID</label>
+              <!-- Optional here per client request; Zoho holds the
                      necessary validation for this field. -->
-                <input type="text" id="vat_id" name="vat_id" maxlength="255" placeholder="DE123456789" />
-                <p class="sw-error" data-error-for="vat_id"></p>
-              </div>
-              <div class="sw-field">
-                <label for="register_number" style="white-space:nowrap;">Gewerbe-Handelsregisternummer</label>
-                <input type="text" id="register_number" name="register_number" maxlength="255" placeholder="HRA 12345" />
-                <p class="sw-error" data-error-for="register_number"></p>
-              </div>
+              <input type="text" id="vat_id" name="vat_id" maxlength="255" placeholder="DE123456789" />
+              <p class="sw-error" data-error-for="vat_id"></p>
             </div>
+            <div class="sw-field">
+              <label for="register_number" style="white-space:nowrap;">Gewerbe-Handelsregisternummer</label>
+              <input type="text" id="register_number" name="register_number" maxlength="255" placeholder="HRA 12345" />
+              <p class="sw-error" data-error-for="register_number"></p>
+            </div>
+          </div>
 
-            <div class="sw-field sw-half">
-              <label for="fid">FID (Track and trace)</label>
-              <!-- Every FID starts with QCBDR<1DE — the placeholder shows the
+          <div class="sw-field sw-half">
+            <label for="fid">FID (Track and trace)</label>
+            <!-- Every FID starts with QCBDR<1DE — the placeholder shows the
                    full expected shape so customers recognise which number to
                    enter (requested by the ERP team). -->
-              <input type="text" id="fid" name="fid" data-check="fid" maxlength="22" placeholder="QCBDR<1DEXXXXXX/XXXXXX" spellcheck="false" autocapitalize="characters" />
-              <p class="sw-error" data-error-for="fid"></p>
-            </div>
+            <input type="text" id="fid" name="fid" data-check="fid" maxlength="22" placeholder="QCBDR<1DEXXXXXX/XXXXXX"
+              spellcheck="false" autocapitalize="characters" />
+            <p class="sw-error" data-error-for="fid"></p>
+          </div>
 
-            <h2 class="sw-subhead">Nachweise</h2>
-            <p class="sw-note">
-              Für die Registrierung benötigen wir deinen Gewerbeschein —
-              Vorder- und Rückseite, falls vorhanden.
-            </p>
+          <h2 class="sw-subhead">Nachweise</h2>
+          <p class="sw-note">
+            Für die Registrierung benötigen wir deinen Gewerbeschein —
+            Vorder- und Rückseite, falls vorhanden.
+          </p>
 
-            <!-- Both slots now carry the Gewerbeschein (front/back). The Zoho
+          <!-- Both slots now carry the Gewerbeschein (front/back). The Zoho
                  field names keep their historical meaning: FileUpload1
                  (register_document) was always the Gewerbeschein slot, so it is
                  the front; FileUpload (vat_document) — formerly the VAT ID
                  document, which customers used for the Gewerbeschein anyway —
                  is repurposed as the back. -->
-            <div class="sw-field">
-              <label for="register_document">Gewerbeschein hochladen (Vorderseite)</label>
-              <!-- Optional here per client request; Zoho holds the
+          <div class="sw-field">
+            <label for="register_document">Gewerbeschein hochladen (Vorderseite)</label>
+            <!-- Optional here per client request; Zoho holds the
                    necessary validation for this field. -->
-              <div class="sw-drop" data-drop-for="register_document">
-                <input type="file" id="register_document" name="register_document" accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
-                <p class="sw-dropMain">
-                  <span class="sw-dropIcon" aria-hidden="true"></span>
-                  <span class="sw-dropBrowse">Datei auswählen</span> oder per Drag &amp; Drop hier ablegen
-                </p>
-                <p class="sw-dropHint">Unterstützte Formate: PDF, ZIP, DOC, JPG, PNG, TIF, GIF, WEBP</p>
-                <p class="sw-dropFile" hidden></p>
-              </div>
-              <p class="sw-error" data-error-for="register_document"></p>
+            <div class="sw-drop" data-drop-for="register_document">
+              <input type="file" id="register_document" name="register_document"
+                accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
+              <p class="sw-dropMain">
+                <span class="sw-dropIcon" aria-hidden="true"></span>
+                <span class="sw-dropBrowse">Datei auswählen</span> oder per Drag &amp; Drop hier ablegen
+              </p>
+              <p class="sw-dropHint">Unterstützte Formate: PDF, ZIP, DOC, JPG, PNG, TIF, GIF, WEBP</p>
+              <p class="sw-dropFile" hidden></p>
             </div>
-
-            <div class="sw-field">
-              <label for="vat_document">Gewerbeschein hochladen (Rückseite)</label>
-              <div class="sw-drop" data-drop-for="vat_document">
-                <input type="file" id="vat_document" name="vat_document" accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
-                <p class="sw-dropMain">
-                  <span class="sw-dropIcon" aria-hidden="true"></span>
-                  <span class="sw-dropBrowse">Datei auswählen</span> oder per Drag &amp; Drop hier ablegen
-                </p>
-                <p class="sw-dropHint">Unterstützte Formate: PDF, ZIP, DOC, JPG, PNG, TIF, GIF, WEBP</p>
-                <p class="sw-dropFile" hidden></p>
-              </div>
-              <p class="sw-error" data-error-for="vat_document"></p>
-            </div>
-          </section>
-
-          <!-- ============ FOOTER ============ -->
-          <p class="sw-formError" id="formError" role="alert" hidden></p>
-
-          <div class="sw-footer">
-            <p class="sw-login" id="loginHint">
-              Bereits ein Konto? <a href="https://b2b.shisha-world.com/customer/account/login/">Anmelden</a>
-            </p>
-            <button type="button" class="sw-btn sw-btnBack" id="backBtn" hidden>
-              <span class="sw-arrowL" aria-hidden="true"></span> Zurück
-            </button>
-            <span class="sw-spacer"></span>
-            <button type="submit" class="sw-btn sw-btnNext" id="nextBtn" disabled>
-              <span class="sw-btnLabel">Speichern und weiter</span>
-              <span class="sw-arrowR" aria-hidden="true"></span>
-            </button>
+            <p class="sw-error" data-error-for="register_document"></p>
           </div>
-        </form>
-        <!-- No thank-you block here on purpose: "Registrierung abschließen"
+
+          <div class="sw-field">
+            <label for="vat_document">Gewerbeschein hochladen (Rückseite)</label>
+            <div class="sw-drop" data-drop-for="vat_document">
+              <input type="file" id="vat_document" name="vat_document"
+                accept=".pdf,.zip,.doc,.docx,.jpg,.jpeg,.png,.tif,.tiff,.gif,.webp" />
+              <p class="sw-dropMain">
+                <span class="sw-dropIcon" aria-hidden="true"></span>
+                <span class="sw-dropBrowse">Datei auswählen</span> oder per Drag &amp; Drop hier ablegen
+              </p>
+              <p class="sw-dropHint">Unterstützte Formate: PDF, ZIP, DOC, JPG, PNG, TIF, GIF, WEBP</p>
+              <p class="sw-dropFile" hidden></p>
+            </div>
+            <p class="sw-error" data-error-for="vat_document"></p>
+          </div>
+        </section>
+
+        <!-- ============ FOOTER ============ -->
+        <p class="sw-formError" id="formError" role="alert" hidden></p>
+
+        <div class="sw-footer">
+          <p class="sw-login" id="loginHint">
+            Bereits ein Konto? <a href="https://b2b.shisha-world.com/customer/account/login/">Anmelden</a>
+          </p>
+          <button type="button" class="sw-btn sw-btnBack" id="backBtn" hidden>
+            <span class="sw-arrowL" aria-hidden="true"></span> Zurück
+          </button>
+          <span class="sw-spacer"></span>
+          <button type="submit" class="sw-btn sw-btnNext" id="nextBtn" disabled>
+            <span class="sw-btnLabel">Speichern und weiter</span>
+            <span class="sw-arrowR" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+      <!-- No thank-you block here on purpose: "Registrierung abschließen"
              posts straight to Zoho Forms and the browser navigates to Zoho's own
              response page, exactly as index.zoho-export.html did. -->
-      </div>
     </div>
+  </div>
 
-    <script src="js/countries.js"></script>
-    <script src="js/onboarding.js"></script>
-  </body>
+  <script src="js/countries.js"></script>
+  <script src="js/onboarding.js"></script>
+</body>
+
 </html>
