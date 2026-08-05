@@ -322,6 +322,25 @@
     formError.hidden = true;
   }
 
+  function scrollStepIntoView() {
+    var card = form.closest(".sw-card");
+
+    if (card && typeof card.scrollIntoView === "function") {
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    if (window && typeof window.scrollTo === "function") {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+
+    if (document.documentElement) {
+      document.documentElement.scrollTop = 0;
+    }
+    if (document.body) {
+      document.body.scrollTop = 0;
+    }
+  }
+
   /* ============================================================
    * Per-step POST
    * ============================================================ */
@@ -519,14 +538,14 @@
 
     current++;
     render();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollStepIntoView();
   }
 
   function goBack() {
     if (busy || current === 0) return;
     current--;
     render();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollStepIntoView();
   }
 
   /* ============================================================
